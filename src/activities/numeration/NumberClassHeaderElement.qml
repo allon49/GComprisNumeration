@@ -35,6 +35,7 @@ Rectangle {
 
     Drag.active: numberClassHeaderDragArea.drag.active
 
+
     //displays the number of candies each child has
     GCText {
         id: numberClassHeaderCaption

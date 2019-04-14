@@ -26,10 +26,14 @@ import "../../core"
 Rectangle {
     id: numberClassDropArea
 
+    property string className
+
     width: parent.width
     height: parent.height - numberClassHeadersGridLayout.height
 
     color: "blue"
+
+
 
     RowLayout {
         id: numberWeightsDropAreasGridLayout
@@ -43,15 +47,15 @@ Rectangle {
             id: numberWeightsModel
 
             ListElement {
-                name: "hundred"
+                name: "bla"
                 weightElementDroppedName: ""
             }
             ListElement {
-                name: "ten"
+                name: "?"
                 weightElementDroppedName: ""
             }
             ListElement {
-                name: "unit"
+                name: "?"
                 weightElementDroppedName: ""
             }
         }
@@ -80,6 +84,7 @@ Rectangle {
                     y: 0 //numberWeightDropAreaRectangle.y
                     width: numberWeightDropAreaRectangle.width
                     height: numberWeightDropAreaRectangle.height /10
+
                 }
 
 
@@ -103,10 +108,25 @@ Rectangle {
 
                     onDropped: {
                         //console.log("dropped number in: " + numberWeightsModel.get(index).name)
-                        console.log("dropped number in: ")
+                        console.log("dropped number in: " + index)
 
-                        numberWeightsModel.set(index, {"weightElementDroppedName": drag.source.name})
+                        console.log("weightElementDroppedName- "+ className + " " + drag.source.name)
+
+              //          numberWeightsModel.set(index, {"name": drag.source.name})
+                        numberWeightsModel.setProperty(index, "name", drag.source.name)
+
+                        callUpdateNumberWeightHeaderCaption()
+
+                        console.log(numberWeightsModel.get(index).name)
+
+
                     }
+
+                    function callUpdateNumberWeightHeaderCaption() {
+                        numberWeightHeaderElement.updateNumberWeightHeaderCaption()
+                    }
+
+
                 }
             }
         }

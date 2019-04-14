@@ -177,11 +177,11 @@ ActivityBase {
                 spacing: 10
 
                 Repeater {
-                    id: numberClassHeadersRepeater
+                    id: numberClassHeaderElementRepeater
                     model: numberClassListModel
 
                     NumberClassHeaderElement {
-                        id: numberClassHeader
+                        id: numberClassHeaderElement
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
@@ -202,11 +202,13 @@ ActivityBase {
                 spacing: 10
 
                 Repeater {
-                    id: numberClassHeaderElementRepeater
+                    id: numberClassDropAreaElement
                     model: numberClassListModel
 
                     NumberClassDropArea {
                         id: numberClassDropAreaElement
+
+                        className: name  //name comes from numberClassListModel
 
                         Layout.fillHeight: true
                         Layout.fillWidth: true

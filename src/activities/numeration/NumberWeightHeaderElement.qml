@@ -38,6 +38,12 @@ Rectangle {
     Drag.active: numberWeightHeaderDragArea.drag.active
     Drag.keys: "NumberWeightHeader"
 
+    function updateNumberWeightHeaderCaption() {
+        console.log("rrrr " + index )
+        numberWeightHeaderCaption.text = numberWeightsModel.get(index).name
+    }
+
+
     //displays the number of candies each child has
     GCText {
         id: numberWeightHeaderCaption
@@ -62,6 +68,8 @@ Rectangle {
             instruction.hide()
             lastX = numberWeightElement.x
             lastY = numberWeightElement.y
+
+
         }
 
         onReleased: {
