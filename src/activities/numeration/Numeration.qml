@@ -202,7 +202,7 @@ ActivityBase {
                 spacing: 10
 
                 Repeater {
-                    id: numberClassDropAreaElement
+                    id: numberClassDropAreaRepeater
                     model: numberClassListModel
 
                     NumberClassDropArea {
@@ -427,7 +427,7 @@ ActivityBase {
 
                 NumberClassDragElement {
                     id: thousandsClassDragElement
-                    name: qsTr("Thousand Class")
+                    name: qsTr("Thousand-Class")
                     color: "black"
                     Drag.keys: "NumberClass"
                 }
@@ -449,22 +449,28 @@ ActivityBase {
                 NumberClassDragElement {
                     id: unitDragElement
                     name: qsTr("Unit")
+               //     caption: qsTr("Unit")
                     color: "darkred"
-                    Drag.keys: "NumberWeightHeader"
+                    Drag.keys: "numberWeightHeader"
+                    disableDragAfterDrag: false
                 }
 
                 NumberClassDragElement {
                     id: tenDragElement
                     name: qsTr("Ten")
+                 //   caption: qsTr("Ten")
                     color: "darkred"
-                    Drag.keys: "NumberWeightHeader"
+                    Drag.keys: "numberWeightHeader"
+                    disableDragAfterDrag: false
                 }
 
                 NumberClassDragElement {
                     id: hundredDragElement
                     name: qsTr("Hundred")
+                 //   caption: qsTr("Hundred")
                     color: "darkred"
-                    Drag.keys: "NumberWeightHeader"
+                    Drag.keys: "numberWeightHeader"
+                    disableDragAfterDrag: false
                 }
 
                 NumberWeightDragElement {
@@ -473,6 +479,7 @@ ActivityBase {
                     total: items.totalGirls
                     current: background.currentGirls
                     placedInChild: background.placedInGirls
+                    Drag.keys: "numberWeight"
                 }
 
                 NumberWeightDragElement {
@@ -481,6 +488,7 @@ ActivityBase {
                     total: items.totalGirls
                     current: background.currentGirls
                     placedInChild: background.placedInGirls
+                    Drag.keys: "numberWeight"
                 }
 
                 NumberWeightDragElement {
@@ -490,6 +498,7 @@ ActivityBase {
                     current: background.currentGirls
                     placedInChild: background.placedInGirls
                     caption: "1.000.000"
+                    Drag.keys: "numberWeight"
                 }
 
                 NumberWeightDragElement {
@@ -499,6 +508,7 @@ ActivityBase {
                     current: background.currentGirls
                     placedInChild: background.placedInGirls
                     caption: "   1000   "
+                    Drag.keys: "numberWeight"
                 }
 
 

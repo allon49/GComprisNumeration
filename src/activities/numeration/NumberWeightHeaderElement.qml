@@ -35,16 +35,15 @@ Rectangle {
 
     property Item dragParent
 
-    Drag.active: numberWeightHeaderDragArea.drag.active
-    Drag.keys: "NumberWeightHeader"
+  //  Drag.active: numberWeightHeaderDragArea.drag.active
+  //  Drag.keys: "NumberWeightHeader"
 
     function updateNumberWeightHeaderCaption() {
         console.log("rrrr " + index )
-        numberWeightHeaderCaption.text = numberWeightsModel.get(index).name
+        numberWeightHeaderCaption.text = numberWeightHeadersModel.get(index).name
     }
 
 
-    //displays the number of candies each child has
     GCText {
         id: numberWeightHeaderCaption
 
@@ -54,23 +53,24 @@ Rectangle {
         color: "white"
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
-        text: numberWeightsModel.get(index).name
+        text: numberWeightHeadersModel.get(index).name
     }
 
     MouseArea {
-        id: numberWeightHeaderDragArea
+        id: numberWeightHeader
         anchors.fill: parent
-        drag.target: numberWeightHeaderElement
-
-        onClicked: {             console.log("ggg") }
 
         onPressed: {
-            instruction.hide()
-            lastX = numberWeightElement.x
-            lastY = numberWeightElement.y
-
-
+            console.log("ggg")
+            numberWeightHeadersModel.setProperty(index,"name","?")
+            updateNumberWeightHeaderCaption()
+       //     numberWeightDragElement.x = numberWeightHeaderElement.x
+       //     numberWeightDragElement.y = numberWeightHeaderElement.y
+         //   numberWeightDragElement.opacity = 1
         }
+
+
+
 
         onReleased: {
         }
@@ -78,10 +78,10 @@ Rectangle {
 
         //see with johnny how to oversome this problem
         // see https://stackoverflow.com/questions/32533105/qml-drag-one-component-as-if-it-has-the-top-stacking-order-largest-z
-        states: State {
-            when: mouseArea.drag.active
-            ParentChange { target: numberClassHeaderElement; parent: dragParent }
-            AnchorChanges { target: numberClassHeaderElement; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
-        }
+    //    states: State {
+   //         when: mouseArea.drag.active
+     //       ParentChange { target: numberClassHeaderElement; parent: dragParent }
+   //         AnchorChanges { target: numberClassHeaderElement; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
+  //      }
     }
 }

@@ -39,6 +39,7 @@ Rectangle {
     property string name
     property bool canDrag: true
     property string availableItems
+    property bool disableDragAfterDrag: true
 
     Drag.active: dragAreaElement.drag.active
 
@@ -77,8 +78,9 @@ Rectangle {
             //set the element to its initial coordinates
             numberClassDragElement.x = numberClassDragElement.lastX
             numberClassDragElement.y = numberClassDragElement.lastY
-            numberClassDragElement.opacity = 0.5
-            numberClassDragElement.canDrag = false
+
+            numberClassDragElement.opacity = disableDragAfterDrag ? 0.5 : 1
+            numberClassDragElement.canDrag = !disableDragAfterDrag
             numberClassDragElement.z = numberClassDragElement.lastZ
         }
     }

@@ -54,7 +54,7 @@ Rectangle {
     property var releaseElement: null
 
     Drag.active: numberWeightElementMouseArea.drag.active
-    Drag.keys: "NumberWeight"
+    Drag.keys: "NumberWeightElement"
 
 
     Image {
@@ -77,11 +77,15 @@ Rectangle {
         }
 
 
+
+
         MouseArea {
             id: numberWeightElementMouseArea
             anchors.fill: parent
-            drag.target: (numberWeightDragElement.canDrag) ? numberWeightDragElement : null
-            enabled: element.opacity > 0
+            //drag.target: (numberWeightDragElement.canDrag) ? numberWeightDragElement : null
+
+
+          //  enabled: element.opacity > 0
 /*            onPressed: {
                 instruction.hide()
                 if (numberWeightDragElement.name !== "candy")
@@ -105,13 +109,26 @@ Rectangle {
             }
 
 
+            drag.target: numberWeightDragElement
+
             onReleased: {
                parent.Drag.drop()
                //set the element to its initial coordinates
-               numberWeightDragElement.x = numberWeightDragElement.lastX
-               numberWeightDragElement.y = numberWeightDragElement.lastY
-               numberWeightDragElement.opacity = 0.5
+               //numberWeightDragElement.x = numberWeightDragElement.lastX
+               //numberWeightDragElement.y = numberWeightDragElement.lastY
+               //numberWeightDragElement.opacity = 1
                //numberWeightDragElement.canDrag = false
+
+
+                console.log("set drag")
+                console.log(numberWeightDragElement.Drag.target)
+                parent = numberWeightDragElement.Drag.target
+                print(parent.dropRectangle.color)
+                numberWeightDragElement.x = parent.x
+                numberWeightDragElement.y = parent.y
+
+              //  parent = numberWeightDragElement.Drag.target !== null ? numberWeightDragElement.Drag.target : numberWeightDragElement
+
 
             }
 

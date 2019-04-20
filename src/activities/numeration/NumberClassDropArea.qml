@@ -36,12 +36,29 @@ Rectangle {
 
 
     RowLayout {
-        id: numberWeightsDropAreasGridLayout
+        id: numberWeightsDropAreasRowLayout
 
      //   anchors.top: numberClassHeadersGridLayout.bottom
         width: parent.width
         height: parent.height
         spacing: 10
+
+        ListModel {
+            id: numberWeightHeadersModel
+
+            ListElement {
+                name: "bla"
+                weightElementDroppedName: ""
+            }
+            ListElement {
+                name: "?"
+                weightElementDroppedName: ""
+            }
+            ListElement {
+                name: "?"
+                weightElementDroppedName: ""
+            }
+        }
 
         ListModel {
             id: numberWeightsModel
@@ -62,7 +79,7 @@ Rectangle {
 
         Repeater {
             id: numberWeightsDropAreasRepeater
-            model: numberWeightsModel
+            model: numberWeightHeadersModel
 
             Rectangle {
                 id: numberWeightDropAreaRectangle
@@ -89,16 +106,17 @@ Rectangle {
 
 
                 DropArea {
-                    id: numberWeightsDropArea
+                    id: numberWeightsHeaderDropArea
 
-                    keys: "NumberWeightHeader"
+                    keys: "numberWeightHeader"
 
+                    anchors.top: numberWeightHeaderElement.bottom
                     width: parent.width
-                    height: parent.height
+                    height: parent.height - numberWeightHeaderElement.height
 
                     states: [
                        State {
-                           when: numberWeightsDropArea.containsDrag
+                           when: numberWeightsHeaderDropArea.containsDrag
                            PropertyChanges {
                                target: numberWeightDropAreaRectangle
                                color: "grey"
@@ -107,27 +125,78 @@ Rectangle {
                     ]
 
                     onDropped: {
-                        //console.log("dropped number in: " + numberWeightsModel.get(index).name)
+                        //console.log("dropped number in: " + numberWeightHeadersModel.get(index).name)
                         console.log("dropped number in: " + index)
 
                         console.log("weightElementDroppedName- "+ className + " " + drag.source.name)
 
-              //          numberWeightsModel.set(index, {"name": drag.source.name})
-                        numberWeightsModel.setProperty(index, "name", drag.source.name)
+                        numberWeightHeadersModel.setProperty(index, "name", drag.source.name)
 
                         callUpdateNumberWeightHeaderCaption()
 
-                        console.log(numberWeightsModel.get(index).name)
-
-
+                        console.log(numberWeightHeadersModel.get(index).name)
                     }
 
                     function callUpdateNumberWeightHeaderCaption() {
                         numberWeightHeaderElement.updateNumberWeightHeaderCaption()
                     }
-
-
                 }
+
+                DropArea {
+                    id: numberWeightsDropArea
+
+                    keys: "numberWeight"
+
+                    anchors.top: numberWeightHeaderElement.bottom
+                    width: parent.width
+                    height: parent.height - numberWeightHeaderElement.height
+
+                    states: [
+                       State {
+                           when: numberWeightsHeaderDropArea.containsDrag
+                           PropertyChanges {
+                               target: numberWeightDropAreaRectangle
+                               color: "grey"
+                           }
+                       }
+                    ]
+
+                    onDropped: {
+                        console.log("dropped number in: " + index)
+
+                        console.log("weightElementDroppedName- "+ className + " " + drag.source.name)
+
+                        numberWeightHeadersModel.setProperty(index, "name", drag.source.name)
+
+                        callUpdateNumberWeightHeaderCaption()
+
+                        console.log(numberWeightHeadersModel.get(index).name)
+                    }
+
+                    function callUpdateNumberWeightHeaderCaption() {
+                        numberWeightHeaderElement.updateNumberWeightHeaderCaption()
+                    }
+                }
+
+                Grid {
+                    id: numberWeightDropAreas
+
+                    anchors.left: parent.left; anchors.bottom: parent.bottom;
+                    width: parent.width
+                    height: parent.height
+
+                    opacity: 0.5
+
+                    columns: 3
+
+                    Repeater {
+                        model: 9
+                        //delegate: DropWeightTile { colorKey: "blue" }
+                    }
+                }
+
+
+
             }
         }
     }
