@@ -19,6 +19,7 @@
 import QtQuick 2.6
 import GCompris 1.0
 import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.2
 
 import "../../core"
 
@@ -136,6 +137,16 @@ ActivityBase {
         }
 
 
+        Rectangle {
+            id: numberToConvertRectangle
+
+            width: parent.width / 5
+            height: parent.height / 10
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "red"
+        }
+
+
         //mainZone
         DropArea {
             id: mainZoneArea
@@ -144,17 +155,16 @@ ActivityBase {
                        background.width - leftWidget.width - 40 : background.width - 40
             height: ApplicationSettings.isBarHidden ?
                         background.height : background.vert ?
-                            background.height - (bar.height * 1.1) :
+                            background.height - numberToConvertRectangle.height - (bar.height * 1.1) :
                             background.height - (bar.height * 1.1) - leftWidget.height
 
             anchors {
-                top: background.vert ? parent.top : leftWidget.bottom
+                top: background.vert ? numberToConvertRectangle.bottom : leftWidget.bottom
                 left: background.vert ? leftWidget.right : parent.left
-                topMargin: 20
                 leftMargin: 20
             }
 
-            keys: "NumberClass"
+            keys: "NumberClassKey"
 
             Rectangle {
                 id: dropRectangle
@@ -172,6 +182,7 @@ ActivityBase {
             RowLayout {
                 id: numberClassHeadersGridLayout
 
+                anchors.top: numberToConvertRectangle.bottom
                 width: parent.width
                 height: parent.height/10
                 spacing: 10
@@ -207,6 +218,8 @@ ActivityBase {
 
                     NumberClassDropArea {
                         id: numberClassDropAreaElement
+
+                        anchors.top: numberClassHeadersGridLayout.bottom
 
                         className: name  //name comes from numberClassListModel
 
@@ -389,156 +402,191 @@ ActivityBase {
             border.width: 4
             z: 4
 
+
             //grid with ok button and images of a boy, a girl, a candy and a basket
-            Grid {
-                id: view
-                x: 10
-                y: 10
 
-                width: background.vert ? leftWidget.width : 3 * bar.height
-                height: background.vert ? background.height - 2 * bar.height : bar.height
-                spacing: 10
-                columns: background.vert ? 1 : 5
+            Flickable {
+                id: flickableElement
 
-                //ok button
-                Image {
-                    id: okButton
-                    source:"qrc:/gcompris/src/core/resource/bar_ok.svg"
-                    sourceSize.width: items.cellSize * 1.5
-                    fillMode: Image.PreserveAspectFit
+                anchors.fill: parent
+                width: background.height
+                height: leftWidget.width
+                //contentHeight: gridView.height
+                contentHeight: gridView.height * 1.5
+                contentWidth: leftWidget.width
+                boundsBehavior: Flickable.DragAndOvershootBounds
 
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        enabled: background.finished ? false : true
-                        onPressed: okButton.opacity = 0.6
-                        onReleased: okButton.opacity = 1
-                        onClicked: background.check()
+                Grid {
+                    id: gridView
+                    x: 10
+                    y: 10
+
+                    width: parent.width
+                    height: background.height
+
+
+
+               //
+                    //width: background.vert ? leftWidget.width : 3 * bar.height
+               //     height: background.vert ? background.height - 2 * bar.height : bar.height
+                    spacing: 10
+                    columns: background.vert ? 1 : 5
+
+                    //ok button
+                    Image {
+                        id: okButton
+                        source:"qrc:/gcompris/src/core/resource/bar_ok.svg"
+                        sourceSize.width: items.cellSize * 1.5
+                        fillMode: Image.PreserveAspectFit
+
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            enabled: background.finished ? false : true
+                            onPressed: okButton.opacity = 0.6
+                            onReleased: okButton.opacity = 1
+                            onClicked: background.check()
+                        }
+                    }
+
+
+                    NumberClassDragElement {
+                        id: unitsClassDragElement
+                        name: qsTr("Unit Class")
+                        color: "black"
+                        Drag.keys: "NumberClassKey"
+                    }
+
+                    NumberClassDragElement {
+                        id: thousandsClassDragElement
+                        name: qsTr("Thousand-Class")
+                        color: "black"
+                        Drag.keys: "NumberClassKey"
+                    }
+
+                    NumberClassDragElement {
+                        id: millionsClassDragElement
+                        name: qsTr("Million Class")
+                        color: "black"
+                        Drag.keys: "NumberClassKey"
+                    }
+
+                    NumberClassDragElement {
+                        id: milliardsClassDragElement
+                        name: qsTr("Milliard Class")
+                        color: "black"
+                        Drag.keys: "NumberClassKey"
+                    }
+
+                    NumberClassDragElement {
+                        id: unitDragElement
+                        name: qsTr("Unit")
+                   //     caption: qsTr("Unit")
+                        color: "darkred"
+                        Drag.keys: "numberWeightHeaderKey"
+                        disableDragAfterDrag: false
+                    }
+
+                    NumberClassDragElement {
+                        id: tenDragElement
+                        name: qsTr("Ten")
+                     //   caption: qsTr("Ten")
+                        color: "darkred"
+                        Drag.keys: "numberWeightHeaderKey"
+                        disableDragAfterDrag: false
+                    }
+
+                    NumberClassDragElement {
+                        id: hundredDragElement
+                        name: qsTr("Hundred")
+                     //   caption: qsTr("Hundred")
+                        color: "darkred"
+                        Drag.keys: "numberWeightHeaderKey"
+                        disableDragAfterDrag: false
+                    }
+
+                    NumberWeightDragElement {
+                        id: unitWeightDragElement
+                        name: "unity"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: tenWeightDragElement
+                        name: "ten"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: hundredWeightDragElement
+                        name: "hundred"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        caption: "1.000.000"
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: thousandWeightDragElement
+                        name: "bag"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        caption: "   1000   "
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: thousandWeightDragElement2
+                        name: "bag"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        caption: "   1000   "
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: thousandWeightDragElement3
+                        name: "bag"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        caption: "   1000   "
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: thousandWeightDragElement4
+                        name: "bag"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        caption: "   1000   "
+                        Drag.keys: "numberWeightKey"
+                    }
+
+                    NumberWeightDragElement {
+                        id: thousandWeightDragElement5
+                        name: "bag"
+                        total: items.totalGirls
+                        current: background.currentGirls
+                        placedInChild: background.placedInGirls
+                        caption: "   1000   "
+                        Drag.keys: "numberWeightKey"
                     }
                 }
 
-
-                NumberClassDragElement {
-                    id: unitsClassDragElement
-                    name: qsTr("Unit Class")
-                    color: "black"
-                    Drag.keys: "NumberClass"
-                }
-
-                NumberClassDragElement {
-                    id: thousandsClassDragElement
-                    name: qsTr("Thousand-Class")
-                    color: "black"
-                    Drag.keys: "NumberClass"
-                }
-
-                NumberClassDragElement {
-                    id: millionsClassDragElement
-                    name: qsTr("Million Class")
-                    color: "black"
-                    Drag.keys: "NumberClass"
-                }
-
-                NumberClassDragElement {
-                    id: milliardsClassDragElement
-                    name: qsTr("Milliard Class")
-                    color: "black"
-                    Drag.keys: "NumberClass"
-                }
-
-                NumberClassDragElement {
-                    id: unitDragElement
-                    name: qsTr("Unit")
-               //     caption: qsTr("Unit")
-                    color: "darkred"
-                    Drag.keys: "numberWeightHeader"
-                    disableDragAfterDrag: false
-                }
-
-                NumberClassDragElement {
-                    id: tenDragElement
-                    name: qsTr("Ten")
-                 //   caption: qsTr("Ten")
-                    color: "darkred"
-                    Drag.keys: "numberWeightHeader"
-                    disableDragAfterDrag: false
-                }
-
-                NumberClassDragElement {
-                    id: hundredDragElement
-                    name: qsTr("Hundred")
-                 //   caption: qsTr("Hundred")
-                    color: "darkred"
-                    Drag.keys: "numberWeightHeader"
-                    disableDragAfterDrag: false
-                }
-
-                NumberWeightDragElement {
-                    id: unitWeightDragElement
-                    name: "unity"
-                    total: items.totalGirls
-                    current: background.currentGirls
-                    placedInChild: background.placedInGirls
-                    Drag.keys: "numberWeight"
-                }
-
-                NumberWeightDragElement {
-                    id: tenWeightDragElement
-                    name: "ten"
-                    total: items.totalGirls
-                    current: background.currentGirls
-                    placedInChild: background.placedInGirls
-                    Drag.keys: "numberWeight"
-                }
-
-                NumberWeightDragElement {
-                    id: hundredWeightDragElement
-                    name: "hundred"
-                    total: items.totalGirls
-                    current: background.currentGirls
-                    placedInChild: background.placedInGirls
-                    caption: "1.000.000"
-                    Drag.keys: "numberWeight"
-                }
-
-                NumberWeightDragElement {
-                    id: thousandWeightDragElement
-                    name: "bag"
-                    total: items.totalGirls
-                    current: background.currentGirls
-                    placedInChild: background.placedInGirls
-                    caption: "   1000   "
-                    Drag.keys: "numberWeight"
-                }
-
-
-       /*         ChildWidget {
-                    id: girlWidget
-                    name: "girl"
-                    total: items.totalGirls
-                    current: background.currentGirls
-                    placedInChild: background.placedInGirls
-                }
-
-                ChildWidget {
-                    id: boyWidget
-                    name: "boy"
-                    total: items.totalBoys
-                    current: background.currentBoys
-                    placedInChild: background.placedInBoys
-                }
-
-                CandyWidget {
-                    id: candyWidget
-                    total: background.easyMode ? items.totalCandies : 8 * items.totalChildren + 1
-                    current: background.currentCandies
-                    element.opacity: background.easyMode ? 1 : 0
-                }
-
-                BasketWidget {
-                    id: basketWidget
-                }*/
             }
+
+
         }
 
         // show message warning for placing too many candies in one area

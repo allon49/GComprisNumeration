@@ -24,18 +24,6 @@ import "../../core"
 Rectangle {
     id: numberWeightDragElement
 
-    width: parent.width - parent.width/5
-    height: parent.height / 15
-
-    color: "transparent"
-
-    src: "resource/images/" + name + ".svg"
-    availableItems: (background.showCount && background.easyMode) ?
-                           numberWeightDragElement.total - numberWeightDragElement.current : ""
-
-    property int placedInChild
-
-
     //initial position of the element
     //(these vars are assigned to element after release of click mouse)
     property int lastX
@@ -53,19 +41,33 @@ Rectangle {
     // callback defined in each numberWeightDragElement called when we release the element in background
     property var releaseElement: null
 
-    Drag.active: numberWeightElementMouseArea.drag.active
-    Drag.keys: "NumberWeightElement"
 
+
+    width: parent.width - parent.width/5
+    height: parent.height / 15
+
+    color: "transparent"
+
+    src: "resource/images/" + name + ".svg"
+
+    availableItems: (background.showCount && background.easyMode) ?
+                           numberWeightDragElement.total - numberWeightDragElement.current : ""
+
+    property int placedInChild
+
+
+
+    Drag.active: numberWeightDragElementMouseArea.drag.active
 
     Image {
-        id: numberWeightElementImage
+        id: numberWeightDragElementImage
         sourceSize.width: items.cellSize * 1.5
         sourceSize.height: items.cellSize * 1.5
         source: numberWeightDragElement.src
 
         //number of available items
         GCText {
-            id: numberClassElementCaption
+            id: numberWeightDragElementCaption
 
             anchors.fill: parent
             anchors.bottom: parent.bottom
@@ -75,64 +77,60 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
             text: caption
         }
+    }
 
 
 
 
-        MouseArea {
-            id: numberWeightElementMouseArea
-            anchors.fill: parent
-            //drag.target: (numberWeightDragElement.canDrag) ? numberWeightDragElement : null
+    MouseArea {
+        id: numberWeightDragElementMouseArea
+        anchors.fill: parent
+        //     drag.target: (numberWeightDragElement.canDrag) ? numberWeightDragElement : null
 
 
-          //  enabled: element.opacity > 0
-/*            onPressed: {
-                instruction.hide()
-                if (numberWeightDragElement.name !== "candy")
-                    background.resetCandy()
-                //set the initial position
-                numberWeightDragElement.lastX = numberWeightDragElement.x
-                numberWeightDragElement.lastY = numberWeightDragElement.y
-            }
+        //  enabled: element.opacity > 0
+        /*            onPressed: {
+        instruction.hide()
+        if (numberWeightDragElement.name !== "candy")
+            background.resetCandy()
+        //set the initial position
+        numberWeightDragElement.lastX = numberWeightDragElement.x
+        numberWeightDragElement.lastY = numberWeightDragElement.y
+        }
 
-            onReleased: {
-                //set the numberWeightDragElement to its initial coordinates
-                numberWeightDragElement.x = numberWeightDragElement.lastX
-                numberWeightDragElement.y = numberWeightDragElement.lastY
-            }*/
+        onReleased: {
+        //set the numberWeightDragElement to its initial coordinates
+        numberWeightDragElement.x = numberWeightDragElement.lastX
+        numberWeightDragElement.y = numberWeightDragElement.lastY
+        }*/
 
-            onPressed: {
-               //set the initial position
-               numberWeightDragElement.lastX = numberWeightDragElement.x
-               numberWeightDragElement.lastY = numberWeightDragElement.y
-               console.log("moving left element")
-            }
-
-
-            drag.target: numberWeightDragElement
-
-            onReleased: {
-               parent.Drag.drop()
-               //set the element to its initial coordinates
-               //numberWeightDragElement.x = numberWeightDragElement.lastX
-               //numberWeightDragElement.y = numberWeightDragElement.lastY
-               //numberWeightDragElement.opacity = 1
-               //numberWeightDragElement.canDrag = false
+        onPressed: {
+            //set the initial position
+            numberWeightDragElement.lastX = numberWeightDragElement.x
+            numberWeightDragElement.lastY = numberWeightDragElement.y
+            console.log("moving left element")
+        }
 
 
-                console.log("set drag")
-                console.log(numberWeightDragElement.Drag.target)
-                parent = numberWeightDragElement.Drag.target
-                print(parent.dropRectangle.color)
-                numberWeightDragElement.x = parent.x
-                numberWeightDragElement.y = parent.y
+        drag.target: numberWeightDragElement
 
-              //  parent = numberWeightDragElement.Drag.target !== null ? numberWeightDragElement.Drag.target : numberWeightDragElement
-
-
-            }
+        onReleased: {
+            parent.Drag.drop()
+            //set the element to its initial coordinates
+            //numberWeightDragElement.x = numberWeightDragElement.lastX
+            //numberWeightDragElement.y = numberWeightDragElement.lastY
+            //numberWeightDragElement.opacity = 1
+            //numberWeightDragElement.canDrag = false
 
 
+            /*      console.log("set drag")
+            console.log(numberWeightDragElement.Drag.target)
+            parent = numberWeightDragElement.Drag.target*/
+            //print(parent.dropRectangle.color)
+            //     numberWeightDragElement.x = parent.x
+            //     numberWeightDragElement.y = parent.y
+
+            //  parent = numberWeightDragElement.Drag.target !== null ? numberWeightDragElement.Drag.target : numberWeightDragElement
 
         }
     }

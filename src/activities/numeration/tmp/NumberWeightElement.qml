@@ -23,8 +23,7 @@ import GCompris 1.0
 import "../../core"
 
 Rectangle {
-    id: numberWeightHeaderElement
-    color: "darkred"
+    id: numberWeightElement
     radius: 0.2
     z: 1
 
@@ -35,35 +34,33 @@ Rectangle {
 
     property Item dragParent
 
-    Drag.active: numberWeightHeaderElementMouseArea.drag.active
-    Drag.keys: "NumberWeightHeaderKey"
+    Drag.active: numberWeightElementMouseArea.drag.active
+    Drag.keys: "NumberWeightHeaderElement"
 
-    function updateNumberWeightHeaderCaption() {
-        console.log("rrrr " + index )
-        numberWeightHeaderCaption.text = numberWeightHeadersModel.get(index).name
+    function updateNumberWeightImage() {
+        console.log("updateNumberWeightImage " + index )
+        numberWeightImage.source = numberWeightHeadersModel.get(index).name
     }
 
 
-    GCText {
-        id: numberWeightHeaderCaption
+    Image {
+        id: numberWeightImage
 
         anchors.fill: parent
         anchors.bottom: parent.bottom
-        fontSizeMode: Text.Fit
-        color: "white"
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
-        text: numberWeightHeadersModel.get(index).name
+
     }
 
     MouseArea {
-        id: numberWeightHeaderElementMouseArea
+        id: numberWeightElementMouseArea
         anchors.fill: parent
 
         onPressed: {
             console.log("ggg")
-            numberWeightHeadersModel.setProperty(index,"name","?")
-            updateNumberWeightHeaderCaption()
+            //numberWeightHeadersModel.setProperty(index,"name","?")
+            //updateNumberWeightHeaderCaption()
        //     numberWeightDragElement.x = numberWeightHeaderElement.x
        //     numberWeightDragElement.y = numberWeightHeaderElement.y
          //   numberWeightDragElement.opacity = 1
@@ -76,12 +73,6 @@ Rectangle {
         }
 
 
-        //see with johnny how to oversome this problem
-        // see https://stackoverflow.com/questions/32533105/qml-drag-one-component-as-if-it-has-the-top-stacking-order-largest-z
-    //    states: State {
-   //         when: mouseArea.drag.active
-     //       ParentChange { target: numberClassHeaderElement; parent: dragParent }
-   //         AnchorChanges { target: numberClassHeaderElement; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
-  //      }
+
     }
 }

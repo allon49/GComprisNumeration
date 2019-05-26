@@ -41,7 +41,7 @@ Rectangle {
     property string availableItems
     property bool disableDragAfterDrag: true
 
-    Drag.active: dragAreaElement.drag.active
+    Drag.active: numberClassDragElementMouseArea.drag.active
 
     //number of available items
     GCText {
@@ -58,11 +58,11 @@ Rectangle {
 
 
     MouseArea {
-        id: dragAreaElement
+        id: numberClassDragElementMouseArea
         anchors.fill: parent
 
         drag.target: (numberClassDragElement.canDrag) ? parent : null
-
+        drag.axis: numberClassDragElement.x < parent.width ? Drag.XAxis : Drag.XAndYAxis
         onPressed: {
             instruction.hide()
             //set the initial position
