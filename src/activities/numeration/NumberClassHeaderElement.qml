@@ -22,6 +22,132 @@ import GCompris 1.0
 
 import "../../core"
 
+/*Component {
+      id: numberClassHeaderElement
+
+      Rectangle {
+          id: content
+
+          width: mainZoneArea.width / numberClassListModel.count
+
+        //  anchors { left: parent.left; right: parent.right }
+          height: column.implicitHeight + 4
+
+          border.width: 1
+          border.color: "lightsteelblue"
+
+          radius: 2
+
+          Column {
+              id: column
+              anchors { fill: parent; margins: 2 }
+
+              Text { text: 'Name: ' + name }
+              Text { text: 'Type: ' + type }
+              Text { text: 'Age: ' + age }
+              Text { text: 'Size: ' + size }
+          }
+      }
+  }*/
+
+
+
+
+Component {
+    id: numberClassHeaderElement
+
+
+
+    MouseArea {
+        id: dragArea
+
+        property bool held: false
+
+//        anchors { left: parent.left; right: parent.right }
+
+        width: mainZoneArea.width / numberClassListModel.count
+        height: 20
+
+        //anchors.left: parent.left
+        //height: content.height
+
+        drag.target: held ? content : undefined
+        drag.axis: Drag.XAxis
+
+        onPressed: {
+            console.log("tt")
+            held = true
+        }
+        onReleased: held = false
+
+        Rectangle {
+            id: content
+
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                verticalCenter: parent.verticalCenter
+            }
+            width: dragArea.width;
+
+            height: 20 //à fixer
+
+
+
+            border.width: 1
+            border.color: "lightsteelblue"
+
+            color: dragArea.held ? "lightsteelblue" : "white"
+            Behavior on color { ColorAnimation { duration: 100 } }
+
+            radius: 2
+
+            Drag.active: dragArea.held
+            Drag.source: dragArea
+            Drag.hotSpot.x: width / 2
+            Drag.hotSpot.y: height / 2
+
+            states: State {
+                when: dragArea.held
+
+                ParentChange { target: content; parent: root }
+                AnchorChanges {
+                    target: content
+                    anchors { horizontalCenter: undefined; verticalCenter: undefined }
+                }
+            }
+
+            GCText {
+                id: numberClassHeaderCaption
+
+                anchors.fill: parent
+                anchors.bottom: parent.bottom
+                fontSizeMode: Text.Fit
+                color: "black"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                text: numberClassListModel.get(index).name
+                z: 100
+            }
+
+        }
+
+        DropArea {
+            anchors { fill: parent; margins: 10 }
+
+            onEntered: {
+
+                console.log("entered")
+                visualModel.items.move(
+                        drag.source.DelegateModel.itemsIndex,
+                        dragArea.DelegateModel.itemsIndex)
+                        console.log("drag.source.DelegateModel.itemsIndex : " + drag.source.DelegateModel.itemsIndex)
+                        console.log("dragArea.DelegateModel.itemsIndex : " + dragArea.DelegateModel.itemsIndex)
+            }
+        }
+    }
+}
+
+/*
 Rectangle {
     id: numberClassHeaderElement
     color: "black"
@@ -97,10 +223,15 @@ Rectangle {
             }
         }
         for (var i = 0; i < numberClassHeaderElementRepeater.count-1; i++) {
-          if (numberClassHeaderElement.x > numberClassHeaderElementRepeater.itemAt(i).x && numberClassHeaderElement.x < numberClassHeaderElementRepeater.itemAt(i+1).x) {
-            if (i == index) {
+                console.log("-----numberClassHeaderElement.x > numberClassHeaderElementRepeater.itemAt(i).x && numberClassHeaderElement.x < numberClassHeaderElementRepeater.itemAt(i+1).x)")
+console.log( numberClassHeaderElement.x + " >= " + numberClassHeaderElementRepeater.itemAt(i).x + " && " + numberClassHeaderElement.x + " <=a  " + numberClassHeaderElementRepeater.itemAt(i+1).x)
+            if (numberClassHeaderElement.x >= numberClassHeaderElementRepeater.itemAt(i).x && numberClassHeaderElement.x <= numberClassHeaderElementRepeater.itemAt(i+1).x) {
+
+
+              if (i === index) {
                 numberClassHeaderElement.x = numberClassHeaderElement.lastX
                 numberClassHeaderElement.y = numberClassHeaderElement.lastY
+                console.log("tyklkldkjflkjglkdjflkgj")
             }
             else
             {
@@ -111,4 +242,4 @@ Rectangle {
         }
     }
 }
-
+*/

@@ -36,7 +36,7 @@ Rectangle {
 
 
     width: parent.width
-    height: parent.height - numberClassHeadersGridLayout.height
+    height: parent.height - numberClassHeaders.height
 
     color: "blue"
 
@@ -145,7 +145,7 @@ Rectangle {
                         id: numberWeightDropAreaGrid
 
                         anchors.left: parent.left
-                        anchors.top: numberWeightHeaderElement.bottom;
+                        anchors.top: parent.top
                         anchors.bottom: parent.bottom;
                         width: parent.width
                         height: parent.height
@@ -170,6 +170,8 @@ Rectangle {
                                     console.log("dropped number in: " + index)
 
                                     numberWeightImageTile.source = "qrc:/gcompris/src/activities/numeration/resource/images/" + drag.source.name + ".svg"
+                                  //  numberWeightImageTile.height = numberWeightRectangleTile.height
+                                  //  numberWeightImageTile.width = numberWeightRectangleTile.width
 
 
                                 }
@@ -191,8 +193,7 @@ Rectangle {
                                     Image {
                                         id: numberWeightImageTile
 
-                                        anchors.horizontalCenter: parent.anchors.horizontalCenter    //anchor does not work like I thought it would
-                                        anchors.verticalCenter: parent.anchors.verticalCenter
+                                        anchors.fill: parent
                                         source: numberWeightRectangleTile.src
 
                                         sourceSize.width: parent.width

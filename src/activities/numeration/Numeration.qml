@@ -20,6 +20,7 @@ import QtQuick 2.6
 import GCompris 1.0
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtQml.Models 2.1
 
 import "../../core"
 
@@ -137,16 +138,6 @@ ActivityBase {
         }
 
 
-        Rectangle {
-            id: numberToConvertRectangle
-
-            width: parent.width / 5
-            height: parent.height / 10
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: "red"
-        }
-
-
         //mainZone
         DropArea {
             id: mainZoneArea
@@ -155,11 +146,11 @@ ActivityBase {
                        background.width - leftWidget.width - 40 : background.width - 40
             height: ApplicationSettings.isBarHidden ?
                         background.height : background.vert ?
-                            background.height - numberToConvertRectangle.height - (bar.height * 1.1) :
+                            background.height - (bar.height * 1.1) :
                             background.height - (bar.height * 1.1) - leftWidget.height
 
             anchors {
-                top: background.vert ? numberToConvertRectangle.bottom : leftWidget.bottom
+                top: background.vert ? background.top : leftWidget.bottom
                 left: background.vert ? leftWidget.right : parent.left
                 leftMargin: 20
             }
@@ -179,7 +170,179 @@ ActivityBase {
             }
 
 
-            RowLayout {
+            Rectangle {
+                id: numberToConvertRectangle
+
+                width: parent.width / 5
+                height: parent.height / 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                color: "red"
+            }
+
+
+            Rectangle {
+                id: numberClassHeaders
+
+                height: 50
+                width: parent.width
+                anchors.top: numberToConvertRectangle.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                ListView {
+                       id: listviewid
+
+                       anchors { fill: parent; margins: 2 }
+
+                       model: visualModel
+                       orientation: ListView.Horizontal
+                       interactive: false
+
+                       spacing: 4
+                       cacheBuffer: 50
+                 }
+            }
+
+            DelegateModel {
+                id: visualModel
+
+                model: numberClassListModel
+                delegate: nnumberClassHeaderElement
+            }
+
+
+
+            NumberClassHeaderElement {
+                id: numberClassHeaderElement
+            }
+
+            Component {
+                id: nnumberClassHeaderElement
+
+
+
+                MouseArea {
+                    id: dragArea
+
+                    property bool held: false
+
+                    anchors { top: parent.top; bottom: parent.bottom }
+
+                    width: mainZoneArea.width / numberClassListModel.count
+                    height: 20
+
+                    //anchors.left: parent.left
+                    //height: content.height
+
+                    drag.target: held ? content : undefined
+                //    drag.axis: Drag.XAxis
+
+                    onPressAndHold: {
+                        console.log("tt333")
+                        held = true
+                    }
+                    onReleased: held = false
+
+                    Rectangle {
+                        id: content
+
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            verticalCenter: parent.verticalCenter
+                        }
+                        width: dragArea.width;
+
+                        height: 20 //à fixer
+
+
+
+                        border.width: 1
+                        border.color: "lightsteelblue"
+
+                        color: dragArea.held ? "lightsteelblue" : "white"
+                        Behavior on color { ColorAnimation { duration: 100 } }
+
+                        radius: 2
+
+                        Drag.active: dragArea.held
+                        Drag.source: dragArea
+                        Drag.hotSpot.x: width / 2
+                        Drag.hotSpot.y: height / 2
+
+                        states: State {
+                            when: dragArea.held
+
+                            ParentChange { target: content; parent: root }
+                            AnchorChanges {
+                                target: content
+                                anchors { horizontalCenter: undefined; verticalCenter: undefined }
+                            }
+                        }
+
+                        GCText {
+                            id: numberClassHeaderCaption
+
+                            anchors.fill: parent
+                            anchors.bottom: parent.bottom
+                            fontSizeMode: Text.Fit
+                            color: "black"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            text: numberClassListModel.get(index).name
+                            z: 100
+                        }
+
+                    }
+
+                    DropArea {
+                        anchors { fill: parent; margins: 10 }
+
+                        onEntered: {
+
+                            console.log("entered")
+                            visualModel.items.move(
+                                    drag.source.DelegateModel.itemsIndex,
+                                    dragArea.DelegateModel.itemsIndex)
+                                    console.log("drag.source.DelegateModel.itemsIndex : " + drag.source.DelegateModel.itemsIndex)
+                                    console.log("dragArea.DelegateModel.itemsIndex : " + dragArea.DelegateModel.itemsIndex)
+                        }
+                    }
+                }
+            }
+
+
+            Component {
+                  id: dragDelegate
+
+                  Rectangle {
+                      id: content
+
+                      width: mainZoneArea.width / numberClassListModel.count
+
+                    //  anchors { left: parent.left; right: parent.right }
+                      height: column.implicitHeight + 4
+
+                      border.width: 1
+                      border.color: "lightsteelblue"
+
+                      radius: 2
+
+                      Column {
+                          id: column
+                          anchors { fill: parent; margins: 2 }
+
+                          Text { text: 'Name: ' + name }
+                          Text { text: 'Type: ' + type }
+                          Text { text: 'Age: ' + age }
+                          Text { text: 'Size: ' + size }
+                      }
+                  }
+              }
+
+
+
+     /*       RowLayout {
                 id: numberClassHeadersGridLayout
 
                 anchors.top: numberToConvertRectangle.bottom
@@ -194,22 +357,23 @@ ActivityBase {
                     NumberClassHeaderElement {
                         id: numberClassHeaderElement
 
+
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.minimumWidth: 50
                         Layout.preferredWidth: 100
-                        dragParent: dragContainer   //try to see all elements on the top does not work
+                        //dragParent: dragContainer   //try to see all elements on the top does not work
                     }
                 }
-            }
+            }*/
 
 
             RowLayout {
                 id: numberClassDropAreasGridLayout
 
-                anchors.top: numberClassHeadersGridLayout.bottom
+                anchors.top: numberClassHeaders.bottom
                 width: parent.width
-                height: parent.height - numberClassHeadersGridLayout.height
+                height: parent.height - numberClassHeaders.height
                 spacing: 10
 
                 Repeater {
@@ -218,8 +382,6 @@ ActivityBase {
 
                     NumberClassDropArea {
                         id: numberClassDropAreaElement
-
-                        anchors.top: numberClassHeadersGridLayout.bottom
 
                         className: name  //name comes from numberClassListModel
 
@@ -377,7 +539,7 @@ ActivityBase {
             anchors {
                 top: background.vert ? parent.top : leftWidget.bottom
                 topMargin: -10
-                horizontalCenter: grid.horizontalCenter
+                horizontalCenter: background.horizontalCenter
             }
             opacity: instruction.opacity
             z: instruction.z
