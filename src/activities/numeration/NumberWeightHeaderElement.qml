@@ -39,7 +39,6 @@ Rectangle {
     Drag.keys: "NumberWeightHeaderKey"
 
     function updateNumberWeightHeaderCaption() {
-        console.log("rrrr " + index )
         numberWeightHeaderCaption.text = numberWeightHeadersModel.get(index).name
     }
 
@@ -61,27 +60,9 @@ Rectangle {
         anchors.fill: parent
 
         onPressed: {
-            console.log("ggg")
             numberWeightHeadersModel.setProperty(index,"name","?")
             updateNumberWeightHeaderCaption()
-       //     numberWeightDragElement.x = numberWeightHeaderElement.x
-       //     numberWeightDragElement.y = numberWeightHeaderElement.y
-         //   numberWeightDragElement.opacity = 1
         }
 
-
-
-
-        onReleased: {
-        }
-
-
-        //see with johnny how to oversome this problem
-        // see https://stackoverflow.com/questions/32533105/qml-drag-one-component-as-if-it-has-the-top-stacking-order-largest-z
-    //    states: State {
-   //         when: mouseArea.drag.active
-     //       ParentChange { target: numberClassHeaderElement; parent: dragParent }
-   //         AnchorChanges { target: numberClassHeaderElement; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
-  //      }
     }
 }

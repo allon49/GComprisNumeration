@@ -34,6 +34,7 @@ Rectangle {
     property string name
     property bool canDrag: true
     property string caption
+    property int weightValue: 0
 
 
     property string availableItems
@@ -113,12 +114,16 @@ Rectangle {
 
 
         drag.target: numberWeightDragElement
+        drag.axis: numberWeightDragElement.x < parent.width ? Drag.XAxis : Drag.XAndYAxis
+        Drag.hotSpot.x: width/2
+        Drag.hotSpot.y: height/2
+
 
         onReleased: {
             parent.Drag.drop()
             //set the element to its initial coordinates
-            //numberWeightDragElement.x = numberWeightDragElement.lastX
-            //numberWeightDragElement.y = numberWeightDragElement.lastY
+            numberWeightDragElement.x = numberWeightDragElement.lastX
+            numberWeightDragElement.y = numberWeightDragElement.lastY
             //numberWeightDragElement.opacity = 1
             //numberWeightDragElement.canDrag = false
 

@@ -58,6 +58,7 @@ ActivityBase {
             property alias listModel: listModel
             property bool acceptCandy: false
             property alias dataset: dataset
+            property alias  numberClassListModel: numberClassListModel
            // property alias girlWidget: girlWidget
    //         property alias boyWidget: boyWidget
      //       property alias candyWidget: candyWidget
@@ -106,12 +107,19 @@ ActivityBase {
         }
 
         //check if the answer is correct
-        function check() {
-            background.resetCandy()
-            background.finished = true
+        function checkAnswer() {
 
             var ok = 0
             var okRest = 0
+
+            for (var i = 0 ; i < numberClassDropAreaRepeater.count ; i++) {
+              //  console.log("numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).jot " + numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).jot)
+             //   console.log("numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).jot " + numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).numberWeightHeadersModelAlias.get(0).name) //numberWeightsDropAreasRepeater.itemAt(0).color)
+
+                /*for (var j = 0 ; j < numberClassListModel.get(i).numberWeightHeadersModel.count ; j++) {
+                    console.log("numberClassListModel.get(i).numberWeightHeadersModel.get(j)" + numberClassListModel.get(i).numberWeightHeadersModel.get(j))
+                }*/
+            }
 
             if (listModel.count >= items.totalChildren) {
                 for (var i = 0 ; i < listModel.count ; i++) {
@@ -165,15 +173,19 @@ ActivityBase {
             }
 
             onDropped: {
-                numberClassListModel.append({"name": drag.source.name})
-                console.log("fffff" + drag.source.name)
+                numberClassListModel.append({"name": drag.source.name, "element_src": drag.source})
+                Activity.
+
+                numberClassesArray.push(numberClass)
+                console.log("drag.source" + drag.source)
+                numberClassListModel.get(numberClassListModel.count-1).element_src.dragEnabled = false
             }
 
 
             Rectangle {
                 id: numberToConvertRectangle
 
-                width: parent.width / 5
+                width: parent.width / 20
                 height: parent.height / 10
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
@@ -184,8 +196,8 @@ ActivityBase {
             Rectangle {
                 id: numberClassHeaders
 
-                height: 50
-                width: parent.width
+                width: mainZoneArea.width
+                height: mainZoneArea.height / 10
                 anchors.top: numberToConvertRectangle.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -211,12 +223,12 @@ ActivityBase {
                 delegate: nnumberClassHeaderElement
             }
 
-
-
-            NumberClassHeaderElement {
+     /*       NumberClassHeaderElement {
                 id: numberClassHeaderElement
-            }
+            } */
 
+
+            // ask johnny why source.delegate is not seen when defined in a own file
             Component {
                 id: nnumberClassHeaderElement
 
@@ -227,22 +239,34 @@ ActivityBase {
 
                     property bool held: false
 
-                    anchors { top: parent.top; bottom: parent.bottom }
+                    anchors { top: numberClassHeaders.top; bottom: numberClassHeaders.bottom }
 
                     width: mainZoneArea.width / numberClassListModel.count
-                    height: 20
-
-                    //anchors.left: parent.left
-                    //height: content.height
+                    height: numberClassHeaders.height
 
                     drag.target: held ? content : undefined
                 //    drag.axis: Drag.XAxis
 
                     onPressAndHold: {
-                        console.log("tt333")
                         held = true
                     }
-                    onReleased: held = false
+                    onReleased: {
+                        console.log("position on release")
+                        console.log("content: " + content.x)
+                        console.log("leftWidget.width: " + leftWidget.width)
+
+
+
+                        if ((content.x < leftWidget.width) && held)  //don't understand why I have a content.x = 0 when held is not true, this point needs to be cleared
+                        {
+                            console.log("release scr: " + numberClassListModel.get(index).element_src)
+                            numberClassListModel.get(index).element_src.dragEnabled = true
+                            numberClassListModel.remove(index,1)
+                        }
+                        held = false
+                    }
+
+
 
                     Rectangle {
                         id: content
@@ -251,10 +275,9 @@ ActivityBase {
                             horizontalCenter: parent.horizontalCenter
                             verticalCenter: parent.verticalCenter
                         }
-                        width: dragArea.width;
 
-                        height: 20 //à fixer
-
+                        width: mainZoneArea.width / numberClassListModel.count
+                        height: numberClassHeaders.height / 2
 
 
                         border.width: 1
@@ -306,66 +329,17 @@ ActivityBase {
                                     dragArea.DelegateModel.itemsIndex)
                                     console.log("drag.source.DelegateModel.itemsIndex : " + drag.source.DelegateModel.itemsIndex)
                                     console.log("dragArea.DelegateModel.itemsIndex : " + dragArea.DelegateModel.itemsIndex)
+                            numberClassListModel.move(
+                                        drag.source.DelegateModel.itemsIndex,
+                                        dragArea.DelegateModel.itemsIndex,1)
+
+
+
+
                         }
                     }
                 }
             }
-
-
-            Component {
-                  id: dragDelegate
-
-                  Rectangle {
-                      id: content
-
-                      width: mainZoneArea.width / numberClassListModel.count
-
-                    //  anchors { left: parent.left; right: parent.right }
-                      height: column.implicitHeight + 4
-
-                      border.width: 1
-                      border.color: "lightsteelblue"
-
-                      radius: 2
-
-                      Column {
-                          id: column
-                          anchors { fill: parent; margins: 2 }
-
-                          Text { text: 'Name: ' + name }
-                          Text { text: 'Type: ' + type }
-                          Text { text: 'Age: ' + age }
-                          Text { text: 'Size: ' + size }
-                      }
-                  }
-              }
-
-
-
-     /*       RowLayout {
-                id: numberClassHeadersGridLayout
-
-                anchors.top: numberToConvertRectangle.bottom
-                width: parent.width
-                height: parent.height/10
-                spacing: 10
-
-                Repeater {
-                    id: numberClassHeaderElementRepeater
-                    model: numberClassListModel
-
-                    NumberClassHeaderElement {
-                        id: numberClassHeaderElement
-
-
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.minimumWidth: 50
-                        Layout.preferredWidth: 100
-                        //dragParent: dragContainer   //try to see all elements on the top does not work
-                    }
-                }
-            }*/
 
 
             RowLayout {
@@ -373,7 +347,7 @@ ActivityBase {
 
                 anchors.top: numberClassHeaders.bottom
                 width: parent.width
-                height: parent.height - numberClassHeaders.height
+                height: parent.height - numberToConvertRectangle.height - numberClassHeaders.height
                 spacing: 10
 
                 Repeater {
@@ -404,99 +378,6 @@ ActivityBase {
             id: listModel
         }
 
-        //center zone
-/*        Rectangle {
-            id: grid
-            z: 4
-
-            //map the coordinates from widgets to grid
-            property var boy: leftWidget.mapFromItem(boyWidget, boyWidget.element.x, boyWidget.element.y)
-            property var girl: leftWidget.mapFromItem(girlWidget, girlWidget.element.x, girlWidget.element.y)
-            property var basket: leftWidget.mapFromItem(basketWidget, basketWidget.element.x, basketWidget.element.y)
-
-            //show that the widget can be dropped here
-            color: background.contains(boy.x, boy.y, grid) ||
-                   background.contains(girl.x, girl.y, grid) ||
-                   background.contains(basket.x, basket.y, grid) ? "pink" : "transparent"
-
-            anchors {
-                top: background.vert ? parent.top : leftWidget.bottom
-                left: background.vert ? leftWidget.right : parent.left
-                topMargin: 20
-                leftMargin: 20
-            }
-
-            width: background.vert ?
-                       background.width - leftWidget.width - 40 : background.width - 40
-            height: ApplicationSettings.isBarHidden ?
-                        background.height : background.vert ?
-                            background.height - (bar.height * 1.1) :
-                            background.height - (bar.height * 1.1) - leftWidget.height
-
-            //shows/hides the Instruction
-            MouseArea {
-                anchors.fill: parent
-                // first hide the wrong move if visible, then show/hide instruction
-                onClicked: wrongMove.visible ? wrongMove.visible = false :
-                           (instruction.opacity === 0) ?
-                               instruction.show() : instruction.hide()
-            }
-
-
-            ListModel {
-                id: numberClassListModel
-            }
-
-            RowLayout {
-                id: gridlayout
-
-                width: parent.width
-
-                spacing: 10
-
-                Repeater {
-                    id: numberClassDroppedElementRepeater2
-                    model: listModel
-
-                    NumberClassDroppedElement {
-                        id: numberClassDroppedElement22
-
-                        Layout.fillWidth: true
-                        Layout.minimumWidth: 50
-                        Layout.preferredWidth: 100
-
-
-                    }
-                }
-
-
-            }
-
-
-
-            ListModel {
-                id: listModel
-            }
-
-            Flow {
-                id: dropAreas
-                spacing: 10
-
-                width: parent.width
-                height: parent.height
-
-                Repeater {
-                    id: repeaterDropAreas
-                    model: listModel
-
-                    DropChild {
-                        id: rect2
-                        //"nameS" from listModel
-                        name: nameS
-                    }
-                }
-            }
-        }*/
 
         //instruction rectangle
         Rectangle {
@@ -607,35 +488,38 @@ ActivityBase {
                             enabled: background.finished ? false : true
                             onPressed: okButton.opacity = 0.6
                             onReleased: okButton.opacity = 1
-                            onClicked: background.check()
+                            onClicked: {
+                                background.checkAnswer()
+                                Activity.testModel()
+                            }
                         }
                     }
 
 
                     NumberClassDragElement {
                         id: unitsClassDragElement
-                        name: qsTr("Unit Class")
+                        name: qsTr("Unit class")
                         color: "black"
                         Drag.keys: "NumberClassKey"
                     }
 
                     NumberClassDragElement {
                         id: thousandsClassDragElement
-                        name: qsTr("Thousand-Class")
+                        name: qsTr("Thousand class")
                         color: "black"
                         Drag.keys: "NumberClassKey"
                     }
 
                     NumberClassDragElement {
                         id: millionsClassDragElement
-                        name: qsTr("Million Class")
+                        name: qsTr("Million class")
                         color: "black"
                         Drag.keys: "NumberClassKey"
                     }
 
                     NumberClassDragElement {
                         id: milliardsClassDragElement
-                        name: qsTr("Milliard Class")
+                        name: qsTr("Milliard class")
                         color: "black"
                         Drag.keys: "NumberClassKey"
                     }
@@ -646,7 +530,6 @@ ActivityBase {
                    //     caption: qsTr("Unit")
                         color: "darkred"
                         Drag.keys: "numberWeightHeaderKey"
-                        disableDragAfterDrag: false
                     }
 
                     NumberClassDragElement {
@@ -655,7 +538,6 @@ ActivityBase {
                      //   caption: qsTr("Ten")
                         color: "darkred"
                         Drag.keys: "numberWeightHeaderKey"
-                        disableDragAfterDrag: false
                     }
 
                     NumberClassDragElement {
@@ -664,86 +546,57 @@ ActivityBase {
                      //   caption: qsTr("Hundred")
                         color: "darkred"
                         Drag.keys: "numberWeightHeaderKey"
-                        disableDragAfterDrag: false
                     }
 
                     NumberWeightDragElement {
                         id: unitWeightDragElement
                         name: "unity"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
+                        caption: ""
+                        weightValue: 1
                         Drag.keys: "numberWeightKey"
+
                     }
 
                     NumberWeightDragElement {
                         id: tenWeightDragElement
                         name: "ten"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
+                        caption: ""
+                        weightValue: 10
                         Drag.keys: "numberWeightKey"
                     }
 
                     NumberWeightDragElement {
                         id: hundredWeightDragElement
                         name: "hundred"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
-                        caption: "1.000.000"
+                        caption: ""
+                        weightValue: 100
                         Drag.keys: "numberWeightKey"
                     }
 
                     NumberWeightDragElement {
                         id: thousandWeightDragElement
-                        name: "bag"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
-                        caption: "   1000   "
+                        name: "weightCaption"
+                        caption: qsTr("1 000")
+                        weightValue: 1000
                         Drag.keys: "numberWeightKey"
                     }
 
                     NumberWeightDragElement {
-                        id: thousandWeightDragElement2
-                        name: "bag"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
-                        caption: "   1000   "
+                        id: tenthousandWeightDragElement
+                        name: "weightCaption"
+                        caption: qsTr("10 000")
+                        weightValue: 10000
                         Drag.keys: "numberWeightKey"
                     }
 
                     NumberWeightDragElement {
-                        id: thousandWeightDragElement3
-                        name: "bag"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
-                        caption: "   1000   "
+                        id: onehundredthousandWeightDragElement
+                        name: "weightCaption"
+                        caption: qsTr("100 000")
+                        weightValue: 100000
                         Drag.keys: "numberWeightKey"
                     }
 
-                    NumberWeightDragElement {
-                        id: thousandWeightDragElement4
-                        name: "bag"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
-                        caption: "   1000   "
-                        Drag.keys: "numberWeightKey"
-                    }
-
-                    NumberWeightDragElement {
-                        id: thousandWeightDragElement5
-                        name: "bag"
-                        total: items.totalGirls
-                        current: background.currentGirls
-                        placedInChild: background.placedInGirls
-                        caption: "   1000   "
-                        Drag.keys: "numberWeightKey"
-                    }
                 }
 
             }

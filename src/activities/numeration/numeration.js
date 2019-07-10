@@ -30,6 +30,73 @@ var savedPlacedInGirls
 var savedPlacedInBoys
 var savedCurrentCandies
 
+var numberClassesArray = []
+var weightValuesArray = new Array(9)
+var numberClassWeightsValues = {unity:weightValuesArray, ten:weightValuesArray, hundred:weightValuesArray}
+var classNamesArray = {unityClass:numberClassWeightsValues, thousandClass:numberClassWeightsValues, millionClass:numberClassWeightsValues, MilliardClass:numberClassWeightsValues}
+
+function initClassNamesArrayValues() {
+    for (var i=0; i<classNamesArray.count; i++) {
+        for (var j=0; j<numberClassWeightsValues.count; j++) {
+            for (var k=0; k<9; k++) {
+                classNamesArray[i][j][k] = 0
+            }
+        }
+    }
+
+    classNamesArray["thousandClass"]["ten"][3] = 100
+
+    console.log(classNamesArray["thousandClass"]["ten"][0])
+    console.log(classNamesArray["thousandClass"]["ten"][3])
+    console.log(classNamesArray["thousandClass"]["ten"][4])
+}
+
+
+function removeClassInNumberClassesArray(className) {
+
+console.log(numberClassesArray)
+
+    var index = numberClassesArray.indexOf(className);
+    if (index > -1) {
+       numberClassesArray.splice(index, 1);
+    }
+
+    console.log(numberClassesArray)
+
+
+
+}
+
+
+function testModel() {
+    console.log("testModel")
+    console.log(items.numberClassListModel.get(1).name)
+
+}
+
+
+
+function addClassInNumberClassesArray() {
+    numberClassesArray.push(numberClass)
+
+    for (var i=0; i<9; i++) {
+        numberClassesArray[numberClassIndex][numberWeightType][numberWeightIndex] = 123
+    }
+}
+
+function removeClassInNumberClassesArray() {
+    numberClassesArray.pop(numberClass)
+}
+
+function removeClassInNumberClassesArray(numberClassIndex, numberWeightTyp, numberWeightIndex) {
+    numberClassesArray[numberClassIndex][numberWeightType][numberWeightIndex] = 123
+}
+
+function clearClassWeightValues() {
+
+}
+
+
 function start(items_) {
     items = items_
     currentLevel = 0
@@ -40,11 +107,22 @@ function stop() {
 }
 
 function initLevel() {
+    console.log("start")
+
+
     items.bar.level = currentLevel + 1
     var filename = "resource/board/"+ "board" + currentLevel + ".qml"
     items.dataset.source = filename
 
-    setUp()
+//    setUp()
+
+    initClassNamesArrayValues()
+
+
+//    numberClassesArray[0]["unity"][0] = 123
+
+//    console.log("yyyy" + numberClassesArray[0]["unity"][0])
+
 }
 
 function setUp() {
@@ -133,6 +211,7 @@ function setUp() {
     }
     resetBoard()
 }
+
 
 function resetBoard() {
     items.background.currentGirls = 0

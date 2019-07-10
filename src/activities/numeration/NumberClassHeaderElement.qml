@@ -22,62 +22,24 @@ import GCompris 1.0
 
 import "../../core"
 
-/*Component {
-      id: numberClassHeaderElement
-
-      Rectangle {
-          id: content
-
-          width: mainZoneArea.width / numberClassListModel.count
-
-        //  anchors { left: parent.left; right: parent.right }
-          height: column.implicitHeight + 4
-
-          border.width: 1
-          border.color: "lightsteelblue"
-
-          radius: 2
-
-          Column {
-              id: column
-              anchors { fill: parent; margins: 2 }
-
-              Text { text: 'Name: ' + name }
-              Text { text: 'Type: ' + type }
-              Text { text: 'Age: ' + age }
-              Text { text: 'Size: ' + size }
-          }
-      }
-  }*/
-
-
-
 
 Component {
-    id: numberClassHeaderElement
-
-
+    id: nnumberClassHeaderElement
 
     MouseArea {
         id: dragArea
 
         property bool held: false
 
-//        anchors { left: parent.left; right: parent.right }
+        anchors { top: parent.top; bottom: parent.bottom }
 
         width: mainZoneArea.width / numberClassListModel.count
-        height: 20
+        height: mainZoneArea.height / 2
 
-        //anchors.left: parent.left
-        //height: content.height
 
         drag.target: held ? content : undefined
-        drag.axis: Drag.XAxis
 
-        onPressed: {
-            console.log("tt")
-            held = true
-        }
+        onPressAndHold: held = true
         onReleased: held = false
 
         Rectangle {
@@ -87,11 +49,9 @@ Component {
                 horizontalCenter: parent.horizontalCenter
                 verticalCenter: parent.verticalCenter
             }
+
             width: dragArea.width;
-
-            height: 20 //à fixer
-
-
+            height: parent.height
 
             border.width: 1
             border.color: "lightsteelblue"
@@ -135,111 +95,12 @@ Component {
             anchors { fill: parent; margins: 10 }
 
             onEntered: {
-
-                console.log("entered")
-                visualModel.items.move(
-                        drag.source.DelegateModel.itemsIndex,
-                        dragArea.DelegateModel.itemsIndex)
-                        console.log("drag.source.DelegateModel.itemsIndex : " + drag.source.DelegateModel.itemsIndex)
-                        console.log("dragArea.DelegateModel.itemsIndex : " + dragArea.DelegateModel.itemsIndex)
+                numberClassListModel.move(
+                            drag.source.DelegateModel.itemsIndex,
+                            dragArea.DelegateModel.itemsIndex,1)
             }
         }
     }
 }
 
-/*
-Rectangle {
-    id: numberClassHeaderElement
-    color: "black"
-    radius: 0.2
-    z: 1
 
-    property int lastX
-    property int lastY
-
-    property Item dragParent
-
-    Drag.active: numberClassHeaderDragArea.drag.active
-
-
-    //displays the number of candies each child has
-    GCText {
-        id: numberClassHeaderCaption
-
-        anchors.fill: parent
-        anchors.bottom: parent.bottom
-        fontSizeMode: Text.Fit
-        color: "white"
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-        text: numberClassListModel.get(index).name
-    }
-
-    MouseArea {
-        id: numberClassHeaderDragArea
-        anchors.fill: parent
-        drag.target: numberClassHeaderElement
-
-        onClicked: {             console.log("ggg") }
-
-        onPressed: {
-            instruction.hide()
-            lastX = numberClassHeaderElement.x
-            lastY = numberClassHeaderElement.y
-        }
-        onReleased: {
-            orderNumberClasses()
-        }
-
-
-        //see with johnny how to oversome this problem
-        // see https://stackoverflow.com/questions/32533105/qml-drag-one-component-as-if-it-has-the-top-stacking-order-largest-z
-        states: State {
-            when: mouseArea.drag.active
-            ParentChange { target: numberClassHeaderElement; parent: dragParent }
-            AnchorChanges { target: numberClassHeaderElement; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
-        }
-
-    }
-
-    function orderNumberClasses() {
-        console.log("index: " + index + " numberClassHeaderElement.x: " + numberClassHeaderElement.x + " numberClassHeaderElementRepeater.itemAt(index).x: " + numberClassHeaderElementRepeater.itemAt(index).x + "numberClassHeaderElementRepeater.itemAt(0).x : " + numberClassHeaderElementRepeater.itemAt(0).x)
-        if (numberClassHeaderElement.x < numberClassHeaderElementRepeater.itemAt(0).x) {
-            if (index == 0) {
-                numberClassHeaderElement.x = numberClassHeaderElement.lastX
-                numberClassHeaderElement.y = numberClassHeaderElement.lastY
-            } else
-            {
-                numberClassListModel.move(index, 0, 1)
-            }
-        }
-        if (numberClassHeaderElement.x > numberClassHeaderElementRepeater.itemAt(numberClassHeaderElementRepeater.count-1).x) {
-            if (index == numberClassHeaderElementRepeater.count-1) {
-                numberClassHeaderElement.x = numberClassHeaderElement.lastX
-                numberClassHeaderElement.y = numberClassHeaderElement.lastY
-            } else
-            {
-                numberClassListModel.move(index, numberClassHeaderElementRepeater.count-1, 1)
-            }
-        }
-        for (var i = 0; i < numberClassHeaderElementRepeater.count-1; i++) {
-                console.log("-----numberClassHeaderElement.x > numberClassHeaderElementRepeater.itemAt(i).x && numberClassHeaderElement.x < numberClassHeaderElementRepeater.itemAt(i+1).x)")
-console.log( numberClassHeaderElement.x + " >= " + numberClassHeaderElementRepeater.itemAt(i).x + " && " + numberClassHeaderElement.x + " <=a  " + numberClassHeaderElementRepeater.itemAt(i+1).x)
-            if (numberClassHeaderElement.x >= numberClassHeaderElementRepeater.itemAt(i).x && numberClassHeaderElement.x <= numberClassHeaderElementRepeater.itemAt(i+1).x) {
-
-
-              if (i === index) {
-                numberClassHeaderElement.x = numberClassHeaderElement.lastX
-                numberClassHeaderElement.y = numberClassHeaderElement.lastY
-                console.log("tyklkldkjflkjglkdjflkgj")
-            }
-            else
-            {
-                numberClassListModel.move(index, i, 1)
-                console.log("attentin i: " + i)
-            }
-          }
-        }
-    }
-}
-*/

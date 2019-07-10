@@ -37,11 +37,13 @@ Rectangle {
     property int current: 0
     property int total: 0
     property string name
-    property bool canDrag: true
+    //property bool canDrag: true
     property string availableItems
-    property bool disableDragAfterDrag: true
+    property bool dragEnabled: true
 
     Drag.active: numberClassDragElementMouseArea.drag.active
+
+    opacity: dragEnabled ? 1 : 0.5
 
     //number of available items
     GCText {
@@ -61,8 +63,14 @@ Rectangle {
         id: numberClassDragElementMouseArea
         anchors.fill: parent
 
-        drag.target: (numberClassDragElement.canDrag) ? parent : null
+        drag.target: (numberClassDragElement.dragEnabled) ? parent : null
         drag.axis: numberClassDragElement.x < parent.width ? Drag.XAxis : Drag.XAndYAxis
+        Drag.hotSpot.x: width / 2
+        Drag.hotSpot.y: height / 2
+
+
+
+
         onPressed: {
             instruction.hide()
             //set the initial position
@@ -79,8 +87,7 @@ Rectangle {
             numberClassDragElement.x = numberClassDragElement.lastX
             numberClassDragElement.y = numberClassDragElement.lastY
 
-            numberClassDragElement.opacity = disableDragAfterDrag ? 0.5 : 1
-            numberClassDragElement.canDrag = !disableDragAfterDrag
+
             numberClassDragElement.z = numberClassDragElement.lastZ
         }
     }

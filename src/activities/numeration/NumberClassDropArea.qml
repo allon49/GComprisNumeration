@@ -34,38 +34,43 @@ Rectangle {
     property var hundredColumnWeightImagesArray: ["","","","","","","","",""]
     property int hundredColumnWeightImagesArrayIndex: 0
 
+    property string defaultColor: "darkseagreen"
+    property string overlapColor: "grey"
+
+    property alias numberWeightsDropAreasRepeaterAlias: numberWeightsDropAreasRepeater
+    property alias numberWeightHeadersModelAlias: numberWeightHeadersModel
 
     width: parent.width
     height: parent.height - numberClassHeaders.height
 
     color: "blue"
 
+    property string test: "tttt"
+
+    ListModel {
+        id: numberWeightHeadersModel
+
+        ListElement {
+            name: "?"
+            weightElementDroppedName: ""
+        }
+        ListElement {
+            name: "?"
+            weightElementDroppedName: ""
+        }
+        ListElement {
+            name: "?"
+            weightElementDroppedName: ""
+        }
+    }
+
 
     RowLayout {
         id: numberWeightsDropAreasRowLayout
 
-     //   anchors.top: numberClassHeadersGridLayout.bottom
         width: parent.width
         height: parent.height
         spacing: 10
-
-        ListModel {
-            id: numberWeightHeadersModel
-
-            ListElement {
-                name: "?"
-                weightElementDroppedName: ""
-            }
-            ListElement {
-                name: "?"
-                weightElementDroppedName: ""
-            }
-            ListElement {
-                name: "?"
-                weightElementDroppedName: ""
-            }
-        }
-
 
         Repeater {
             id: numberWeightsDropAreasRepeater
@@ -74,10 +79,11 @@ Rectangle {
             Rectangle {
                 id: numberWeightDropAreaRectangle
 
-                property var lastColor
+          //      property var lastColor
+
+                property string jot: "rrr"
 
                 color: "lightsteelblue"
-                z: 100000
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -91,16 +97,14 @@ Rectangle {
                     y: 0 //numberWeightDropAreaRectangle.y
                     width: numberWeightDropAreaRectangle.width
                     height: numberWeightDropAreaRectangle.height /10
-
                 }
-
 
                 DropArea {
                     id: numberWeightsHeaderDropArea
 
                     keys: "numberWeightHeaderKey"
 
-                    anchors.top: numberWeightHeaderElement.bottom
+                    anchors.top: numberWeightHeaderElement.top
                     width: parent.width
                     height: parent.height - numberWeightHeaderElement.height
 
@@ -109,7 +113,7 @@ Rectangle {
                            when: numberWeightsHeaderDropArea.containsDrag
                            PropertyChanges {
                                target: numberWeightDropAreaRectangle
-                               color: "grey"
+                               color: overlapColor
                            }
                        }
                     ]
@@ -130,6 +134,7 @@ Rectangle {
                     function callUpdateNumberWeightHeaderCaption() {
                         numberWeightHeaderElement.updateNumberWeightHeaderCaption()
                     }
+
                 }
 
 
@@ -150,9 +155,9 @@ Rectangle {
                         width: parent.width
                         height: parent.height
 
-                        opacity: 0.5
+                        //opacity: 0.5
 
-                        columns: 3
+                        columns: 1
 
                         Repeater {
                             id: numberWeightDropAreaGridRepeater
@@ -163,23 +168,33 @@ Rectangle {
 
                                 keys: "numberWeightKey"
 
-                                width: parent.width/3
-                                height: parent.height/3
+                                width: parent.width
+                                height: parent.height/9
+
+                                onEntered: {
+                                    numberWeightRectangleTile.color = overlapColor
+                                }
+
+                                onExited: {
+                                    numberWeightRectangleTile.color = defaultColor
+                                }
 
                                 onDropped: {
                                     console.log("dropped number in: " + index)
 
                                     numberWeightImageTile.source = "qrc:/gcompris/src/activities/numeration/resource/images/" + drag.source.name + ".svg"
-                                  //  numberWeightImageTile.height = numberWeightRectangleTile.height
-                                  //  numberWeightImageTile.width = numberWeightRectangleTile.width
-
+                                    numberWeightImageTile.caption = drag.source.caption
+                                    numberWeightRectangleTile.color = defaultColor
+                                    numberWeightItem.weightValue = drag.source.weightValue
 
                                 }
+
 
                                 Rectangle {
                                     id: numberWeightRectangleTile
 
                                     property string src
+
 
                                     //color: "red"
                                     border.color: "black"
@@ -187,192 +202,54 @@ Rectangle {
                                     radius: 10
                                     width: parent.width
                                     height: parent.height
+                                    color: defaultColor
 
-                                    color: "green"
 
-                                    Image {
-                                        id: numberWeightImageTile
+                                    Item {
+                                        id: numberWeightItem
+
+                                        property int weightValue: 0
 
                                         anchors.fill: parent
-                                        source: numberWeightRectangleTile.src
 
-                                        sourceSize.width: parent.width
-                                        sourceSize.height: parent.height
-                                        z: 100
 
-                                        MouseArea {
-                                             anchors.fill: parent
-                                             onClicked: {
-                                                 console.log("ttttttttttttttttttttttt")
-                                                 numberWeightImageTile.source = ""
+                                        Image {
+                                            id: numberWeightImageTile
 
+                                            property string caption: ""
+
+                                            anchors.fill: parent
+                                            source: numberWeightRectangleTile.src
+
+                                            sourceSize.width: parent.width
+                                            sourceSize.height: parent.height
+
+                                            MouseArea {
+                                                 anchors.fill: parent
+                                                 onClicked: {
+                                                     numberWeightImageTile.source = ""
+                                                 }
                                              }
-                                         }
+                                        }
+
+                                        GCText {
+                                            id: numberClassElementCaption
+
+                                            anchors.fill: parent
+                                            anchors.bottom: parent.bottom
+                                            fontSizeMode: Text.Fit
+                                            color: "white"
+                                            verticalAlignment: Text.AlignVCenter
+                                            horizontalAlignment: Text.AlignHCenter
+                                            text: numberWeightImageTile.caption
+
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-
-
-
-
-        /*        DropArea {
-                    id: numberWeightsDropArea
-
-                    keys: "numberWeightKey"
-
-                    anchors.top: numberWeightHeaderElement.bottom
-                    width: parent.width
-                    height: parent.height - numberWeightHeaderElement.height
-
-                    states: [
-                       State {
-                           when: numberWeightsDropArea.containsDrag
-                           PropertyChanges {
-                               target: numberWeightDropAreaRectangle
-                               color: "green"
-                           }
-                       }
-                    ]
-
-                    onDropped: {
-
-                        console.log("dropped number in: " + index)
-
-                        if (index == 0) {
-                            if (hundredColumnWeightImagesArrayIndex < 9) {
-                                hundredColumnWeightImagesArray[hundredColumnWeightImagesArrayIndex] = "qrc:/gcompris/src/activities/numeration/resource/images/" + drag.source.name + ".svg"
-                                hundredColumnWeightImagesArrayIndex++
-                                console.log("debug numberWeightsUnitColumnModelRepeater: " + unitColumnWeightImagesArray[0])
-                            }
-
-                            console.log("debug montre noms des images:")
-                            for (var i=0; i<hundredColumnWeightImagesArray.length;i++) {
-                                numberWeightDropAreaGridRepeater.itemAt(i).src = hundredColumnWeightImagesArray[i]
-                                console.log(hundredColumnWeightImagesArray[i])
-                            }
-                        }
-
-                        if (index == 1) {
-                            if (tenColumnWeightImagesArrayIndex < 9) {
-                                tenColumnWeightImagesArray[tenColumnWeightImagesArrayIndex] = "qrc:/gcompris/src/activities/numeration/resource/images/" + drag.source.name + ".svg"
-                                tenColumnWeightImagesArrayIndex++
-                                console.log("debug numberWeightsUnitColumnModelRepeater: " + unitColumnWeightImagesArray[0])
-                            }
-
-                            console.log("debug montre noms des images:")
-                            for (var j=0; j<tenColumnWeightImagesArray.length;j++) {
-                                numberWeightDropAreaGridRepeater.itemAt(j).src = tenColumnWeightImagesArray[j]
-                                console.log(tenColumnWeightImagesArray[j])
-                            }
-                        }
-
-                        if (index == 2) {
-                            if (unitColumnWeightImagesArrayIndex < 9) {
-                                unitColumnWeightImagesArray[unitColumnWeightImagesArrayIndex] = "qrc:/gcompris/src/activities/numeration/resource/images/" + drag.source.name + ".svg"
-                                unitColumnWeightImagesArrayIndex++
-                                console.log("debug numberWeightsUnitColumnModelRepeater: " + unitColumnWeightImagesArray[0])
-                            }
-
-                            console.log("debug montre noms des images:")
-                            for (var k=0; k<unitColumnWeightImagesArray.length;k++) {
-                                numberWeightDropAreaGridRepeater.itemAt(k).src = unitColumnWeightImagesArray[k]
-                                console.log(unitColumnWeightImagesArray[k])
-                            }
-                        }
-
-
-
-
-
-
-
-
-
-                  /*      //apppend or remove a var and update the Repeater accordingly
-
-                        numberWeightDropAreaGridRepeater.itemAt(1).src = "qrc:/gcompris/src/activities/numeration/resource/images/unity.svg"
-                        //numberWeightDropAreaGridRepeater.itemAt(0).numberWeightDropAreaImage.x
-
-                        callUpdateNumberWeightElements()
-
-                        console.log(numberWeightHeadersModel.get(index).name)*/
-
-
-
-/*                    }
-
-                    function callUpdateNumberWeightElements() {
-                        numberWeightHeaderElement.updateNumberWeightHeaderCaption()
-                    }
-                }*/
-
-
-            /*    GridLayout {
-                    id: grid
-                    columns: 3
-
-                    Text { text: "Three"; font.bold: true; }
-                    Text { text: "words"; color: "red" }
-                    Text { text: "in"; font.underline: true }
-                    Text { text: "a"; font.pixelSize: 20 }
-                    Text { text: "row"; font.strikeout: true }
-                }*/
-
-
-     /*           Grid {
-                    id: numberWeightDropAreaGrid
-
-                    anchors.left: parent.left
-                    anchors.top: numberWeightHeaderElement.bottom;
-                    anchors.bottom: parent.bottom;
-                    width: parent.width
-                  //  height: parent.height
-
-                    opacity: 0.5
-
-                    columns: 3
-
-                    Repeater {
-                        id: numberWeightDropAreaGridRepeater
-                        model: 9
-
-
-
-                        Rectangle {
-                            id: numberWeightRectangleTile
-
-                            property string src
-
-                            //color: "red"
-                            border.color: "black"
-                            border.width: 5
-                            radius: 10
-                            width: parent.width/3
-                            height: parent.height/3
-                            z: 1
-
-
-                            Image {
-                                id: numberWeightImageTile
-                                source: numberWeightRectangleTile.src
-
-                                sourceSize.width: parent.width
-                                sourceSize.height: parent.height
-                                z: 100
-
-                                MouseArea {
-                                     anchors.fill: parent
-                                     onClicked: {
-                                         console.log("ttttttttttttttttttttttt")
-                                     }
-                                 }
-                            }
-                        }
-                    }
-                }*/
             }
         }
     }
