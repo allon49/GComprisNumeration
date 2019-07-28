@@ -30,26 +30,50 @@ var savedPlacedInGirls
 var savedPlacedInBoys
 var savedCurrentCandies
 
-var numberClassesArray = []
-var weightValuesArray = new Array(9)
-var numberClassWeightsValues = {unity:weightValuesArray, ten:weightValuesArray, hundred:weightValuesArray}
-var classNamesArray = {unityClass:numberClassWeightsValues, thousandClass:numberClassWeightsValues, millionClass:numberClassWeightsValues, MilliardClass:numberClassWeightsValues}
 
-function initClassNamesArrayValues() {
-    for (var i=0; i<classNamesArray.count; i++) {
-        for (var j=0; j<numberClassWeightsValues.count; j++) {
-            for (var k=0; k<9; k++) {
-                classNamesArray[i][j][k] = 0
-            }
-        }
-    }
-
-    classNamesArray["thousandClass"]["ten"][3] = 100
-
-    console.log(classNamesArray["thousandClass"]["ten"][0])
-    console.log(classNamesArray["thousandClass"]["ten"][3])
-    console.log(classNamesArray["thousandClass"]["ten"][4])
+var classConstant = {
+    "Unit class": 0,
+    "Thousand class": 1,
+    "Million class":2,
+    "Milliard class":3
 }
+
+var HUNDRED = 0
+var TEN = 1
+var UNIT = 2
+
+
+// Try edit msg
+
+
+
+function createNumberClasses() {
+    var numberClasses = [];
+    for (var i=0; i<4; i++) {
+        numberClasses[i] = [ ]
+        numberClasses[i][0] = [0,0,0,0,0,0,0,0,0]
+        numberClasses[i][1] = [0,0,0,0,0,0,0,0,0]
+        numberClasses[i][2] = [0,0,0,0,0,0,0,0,0]
+    }
+    return numberClasses;
+}
+
+
+var classNamesArray = {}
+
+
+/*var weightValuesArray = new Array(9)
+var numberClassWeightsArray = {"hundred":weightValuesArray, "ten":weightValuesArray, "unit":weightValuesArray}
+var classNamesArray = {"Unit class": 0, "Thousand class": 1, "Million class":2, "Milliard class":3}
+var numberClassWeightsKeysArray = Object.keys(numberClassWeightsArray);
+var classNamesKeysArray = Object.keys(classNamesArray);
+var numberClassesArray = [numberClassWeightsArray]*/
+
+
+
+
+
+
 
 
 function removeClassInNumberClassesArray(className) {
@@ -62,15 +86,59 @@ console.log(numberClassesArray)
     }
 
     console.log(numberClassesArray)
+}
 
 
+function resetClassNameValues(className) {
+    for (var i=0; i<numberClassWeightsValues.count; i++) {
+        for (var j=0; j<9; j++) {
+            classNamesArray[className][i][j] = 0
+        }
+    }
+}
+
+function writeClassNameValue(className, numberClassWeightIndex, rowIndex, numberValue) {
+    console.log("writeClassNameValue: classNamesArray["+className+"]["+numberClassWeightIndex+"]["+rowIndex+"] = "+numberValue);
+    classNamesArray[classConstant[className]][numberClassWeightIndex][rowIndex] = numberValue
+
+    readClassNameValues()
 
 }
+
+function readClassNameValues() {
+    for (var i=0; i<Object.keys(classConstant).length; i++) {
+        for (var j=0; j<3; j++) {
+            for (var k=0; k<9; k++) {
+                console.log(classNamesArray[i][j][k])
+            }
+        }
+    }
+}
+
+function readNumerationTableValues() {
+
+    var numberValueAnswered = 0
+
+    for (var i=0; i<items.numberClassListModel.count; i++) {
+        console.log("classe name " + items.numberClassListModel.get(i).name)
+
+        var className = items.numberClassListModel.get(i).name
+        for (var j=0; j<numberClassWeightsKeysArray.length; j++) {
+            for (var k=0; k<9; k++) {
+                console.log("classNamesArray["+className+"]["+numberClassWeightsKeysArray[j]+"]["+k+"]: " + classNamesArray[className][numberClassWeightsKeysArray[j]][k])
+                numberValueAnswered = numberValueAnswered + classNamesArray[className][numberClassWeightsKeysArray[j]][k]
+            }
+        }
+    }
+
+    console.log("numberValueAnswere is: " + numberValueAnswered)
+}
+
 
 
 function testModel() {
     console.log("testModel")
-    console.log(items.numberClassListModel.get(1).name)
+    console.log(items.numberClassListModel.get(0).name)
 
 }
 
@@ -107,7 +175,7 @@ function stop() {
 }
 
 function initLevel() {
-    console.log("start")
+    console.log("start init ")
 
 
     items.bar.level = currentLevel + 1
@@ -116,7 +184,10 @@ function initLevel() {
 
 //    setUp()
 
-    initClassNamesArrayValues()
+    classNamesArray = createNumberClasses.call();
+
+    console.log("stop init ")
+
 
 
 //    numberClassesArray[0]["unity"][0] = 123

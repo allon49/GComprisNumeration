@@ -112,16 +112,10 @@ ActivityBase {
             var ok = 0
             var okRest = 0
 
-            for (var i = 0 ; i < numberClassDropAreaRepeater.count ; i++) {
-              //  console.log("numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).jot " + numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).jot)
-             //   console.log("numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).jot " + numberClassDropAreaRepeater.itemAt(0).numberWeightsDropAreasRepeaterAlias.itemAt(0).numberWeightHeadersModelAlias.get(0).name) //numberWeightsDropAreasRepeater.itemAt(0).color)
+            Activity.readNumerationTableValues()
 
-                /*for (var j = 0 ; j < numberClassListModel.get(i).numberWeightHeadersModel.count ; j++) {
-                    console.log("numberClassListModel.get(i).numberWeightHeadersModel.get(j)" + numberClassListModel.get(i).numberWeightHeadersModel.get(j))
-                }*/
-            }
 
-            if (listModel.count >= items.totalChildren) {
+          /*  if (listModel.count >= items.totalChildren) {
                 for (var i = 0 ; i < listModel.count ; i++) {
                     if (listModel.get(i).nameS === "basket")
                         okRest = listModel.get(i).countS
@@ -142,7 +136,7 @@ ActivityBase {
             }
 
             //else => bad
-            bonus.bad("flower")
+            bonus.bad("flower")*/
         }
 
 
@@ -173,12 +167,14 @@ ActivityBase {
             }
 
             onDropped: {
-                numberClassListModel.append({"name": drag.source.name, "element_src": drag.source})
-                Activity.
+                var className = drag.source.name
+                numberClassListModel.append({"name": className, "element_src": drag.source})
 
-                numberClassesArray.push(numberClass)
                 console.log("drag.source" + drag.source)
                 numberClassListModel.get(numberClassListModel.count-1).element_src.dragEnabled = false
+
+
+
             }
 
 
@@ -232,14 +228,12 @@ ActivityBase {
             Component {
                 id: nnumberClassHeaderElement
 
-
-
                 MouseArea {
                     id: dragArea
 
                     property bool held: false
 
-                    anchors { top: numberClassHeaders.top; bottom: numberClassHeaders.bottom }
+                   // anchors { top: numberClassHeaders.top; bottom: numberClassHeaders.bottom }
 
                     width: mainZoneArea.width / numberClassListModel.count
                     height: numberClassHeaders.height

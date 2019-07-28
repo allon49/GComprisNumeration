@@ -21,6 +21,7 @@ import GCompris 1.0
 import QtQuick.Layouts 1.3
 
 import "../../core"
+import "numeration.js" as Activity
 
 
 Rectangle {
@@ -51,14 +52,17 @@ Rectangle {
         id: numberWeightHeadersModel
 
         ListElement {
+            weightType: "hundred"
             name: "?"
             weightElementDroppedName: ""
         }
         ListElement {
+            weightType: "ten"
             name: "?"
             weightElementDroppedName: ""
         }
         ListElement {
+            weightType: "unit"
             name: "?"
             weightElementDroppedName: ""
         }
@@ -76,12 +80,13 @@ Rectangle {
             id: numberWeightsDropAreasRepeater
             model: numberWeightHeadersModel
 
+//            property string classNameStr: numberWeightHeadersModel.name
+
+
             Rectangle {
                 id: numberWeightDropAreaRectangle
 
-          //      property var lastColor
-
-                property string jot: "rrr"
+                property string numberWeightDropAreaRectangleIndex: index
 
                 color: "lightsteelblue"
 
@@ -89,6 +94,8 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.minimumWidth: 50
                 Layout.preferredWidth: 100
+
+
 
                 NumberWeightHeaderElement {
                     id: numberWeightHeaderElement
@@ -128,7 +135,13 @@ Rectangle {
 
                         callUpdateNumberWeightHeaderCaption()
 
+                        console.log("jjjjjjj : " + numberWeightsDropAreasRepeater.classNameStr)
+
+                        console.log(numberWeightsDropAreasRepeater.modelData)
+
                         console.log(numberWeightHeadersModel.get(index).name)
+
+
                     }
 
                     function callUpdateNumberWeightHeaderCaption() {
@@ -186,6 +199,19 @@ Rectangle {
                                     numberWeightImageTile.caption = drag.source.caption
                                     numberWeightRectangleTile.color = defaultColor
                                     numberWeightItem.weightValue = drag.source.weightValue
+
+
+                                    var numberClassWeightIndex = numberWeightDropAreaRectangleIndex
+
+                                    var numberValue = drag.source.weightValue
+
+                                    console.log("className: " + className)
+                                    console.log("numberClassWeightIndex: " + numberClassWeightIndex)
+                                    console.log("index: " + index)
+                                    console.log("numberValue: " + numberValue)
+
+                                    Activity.writeClassNameValue(className, numberClassWeightIndex, index, numberValue)
+
 
                                 }
 

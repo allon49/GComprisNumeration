@@ -69,8 +69,6 @@ Rectangle {
         Drag.hotSpot.y: height / 2
 
 
-
-
         onPressed: {
             instruction.hide()
             //set the initial position
