@@ -87,6 +87,8 @@ Rectangle {
                 id: numberWeightDropAreaRectangle
 
                 property string numberWeightDropAreaRectangleIndex: index
+                property string numberWeightKey: weightType
+
 
                 color: "lightsteelblue"
 
@@ -203,6 +205,9 @@ Rectangle {
 
                                     var numberClassWeightIndex = numberWeightDropAreaRectangleIndex
 
+
+                                    console.log("numberWeightKey: " + numberWeightKey)
+
                                     var numberValue = drag.source.weightValue
 
                                     console.log("className: " + className)
@@ -210,8 +215,8 @@ Rectangle {
                                     console.log("index: " + index)
                                     console.log("numberValue: " + numberValue)
 
-                                    Activity.writeClassNameValue(className, numberClassWeightIndex, index, numberValue)
-
+                                    //Activity.writeClassNameValue(className, numberClassWeightIndex, index, numberValue)
+                                    Activity.writeClassNameValue(className, numberWeightKey, index, numberValue)
 
                                 }
 

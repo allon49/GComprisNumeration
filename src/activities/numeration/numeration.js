@@ -38,14 +38,15 @@ var classConstant = {
     "Milliard class":3
 }
 
-var HUNDRED = 0
-var TEN = 1
-var UNIT = 2
+var numberWeightConstant = {
+    "unit": 0,
+    "ten": 1,
+    "hundred":2,
+}
 
+var numberWeightConstantdeb = ["unit","ten","hundred"]
 
-// Try edit msg
-
-
+var numberWeightConstantDeb = ["Unit class","Thousand class","Million class","Milliard class"]
 
 function createNumberClasses() {
     var numberClasses = [];
@@ -70,12 +71,6 @@ var classNamesKeysArray = Object.keys(classNamesArray);
 var numberClassesArray = [numberClassWeightsArray]*/
 
 
-
-
-
-
-
-
 function removeClassInNumberClassesArray(className) {
 
 console.log(numberClassesArray)
@@ -97,22 +92,30 @@ function resetClassNameValues(className) {
     }
 }
 
-function writeClassNameValue(className, numberClassWeightIndex, rowIndex, numberValue) {
-    console.log("writeClassNameValue: classNamesArray["+className+"]["+numberClassWeightIndex+"]["+rowIndex+"] = "+numberValue);
-    classNamesArray[classConstant[className]][numberClassWeightIndex][rowIndex] = numberValue
+function writeClassNameValue(className, numberWeightKey, rowIndex, numberValue) {
+    console.log("numberWeightKey: " + numberWeightKey)
+    console.log("writeClassNameValue: classNamesArray["+className+"]["+numberWeightConstant[numberWeightKey] +"]["+rowIndex+"] = "+numberValue);
+    classNamesArray[classConstant[className]][numberWeightConstant[numberWeightKey]][rowIndex] = numberValue
 
     readClassNameValues()
 
 }
 
 function readClassNameValues() {
+
+    var enteredValue = 0
     for (var i=0; i<Object.keys(classConstant).length; i++) {
+        console.log("ClassNameKey: " + numberWeightConstantDeb[i])
+
         for (var j=0; j<3; j++) {
+            console.log("Class + NumberWeightKey: " + numberWeightConstantDeb[i] + " " + numberWeightConstantdeb[j])
             for (var k=0; k<9; k++) {
-                console.log(classNamesArray[i][j][k])
+                console.log("index: " + k + " " + classNamesArray[i][j][k])
+                enteredValue = enteredValue + classNamesArray[i][j][k]
             }
         }
     }
+    console.log("entered value: " + enteredValue)
 }
 
 function readNumerationTableValues() {
